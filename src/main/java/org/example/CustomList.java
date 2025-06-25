@@ -105,11 +105,13 @@ public class CustomList implements List {
 
     @Override
     public Object get(int index) {
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public Object set(int index, Object element) {
+        checkIndex(index);
         Object oldValue = elementData[index];
         elementData[index] = element;
         return oldValue;
@@ -117,9 +119,7 @@ public class CustomList implements List {
 
     @Override
     public void add(int index, Object element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
 
         ensureCapacity(size + 1);
 
@@ -133,10 +133,7 @@ public class CustomList implements List {
 
     @Override
     public Object remove(int index) {
-        if(index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        checkIndex(index);
         Object removed = elementData[index];
 
         for(int i = index; i < size - 1; i++) {
@@ -171,5 +168,11 @@ public class CustomList implements List {
     @Override
     public List subList(int fromIndex, int toIndex) {
         return null;
+    }
+
+    private void checkIndex(int index) {
+        if(index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
