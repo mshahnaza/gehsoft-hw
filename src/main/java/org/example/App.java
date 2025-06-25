@@ -4,7 +4,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        CustomList list = new CustomList();
+        CustomList<String> list = new CustomList<>();
         list.add("A");
         System.out.println(getElementData(list));
         list.add("B");

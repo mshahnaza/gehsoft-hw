@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomListTest {
-    static List<List<String>> listProvider() {
-        List<List<String>> result = new ArrayList<>();
+    static List<List<Integer>> listProvider() {
+        List<List<Integer>> result = new ArrayList<>();
         result.add(new ArrayList<>());
         result.add(new CustomList());
         return result;

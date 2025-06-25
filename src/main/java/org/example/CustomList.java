@@ -2,16 +2,26 @@ package org.example;
 
 import java.util.*;
 
-public class CustomList implements List {
+public class CustomList<T> implements List<T> {
 
     private int size;
 
     private static final int DEFAULT_CAPACITY = 10;
 
-    private Object[] elementData;
+    private T[] elementData;
 
     public CustomList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
+    public CustomList(int initialCapacity) {
+        if (initialCapacity < 0) {
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
+        } else if (initialCapacity == 0) {
+            elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        } else {
+            elementData = (T[]) new Object[initialCapacity];
+        }
     }
 
     @Override
@@ -25,9 +35,9 @@ public class CustomList implements List {
     }
 
     @Override
-    public boolean add(Object o) {
+    public boolean add(T element) {
         ensureCapacity(size + 1);
-        elementData[size++] = o;
+        elementData[size++] = element;
         return true;
     }
 
@@ -68,6 +78,12 @@ public class CustomList implements List {
 
     @Override
     public boolean remove(Object o) {
+        for (int i = 0; i < size; i++) {
+            if (elementData[i].equals(o)) {
+                remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -104,21 +120,21 @@ public class CustomList implements List {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         checkIndex(index);
         return elementData[index];
     }
 
     @Override
-    public Object set(int index, Object element) {
+    public T set(int index, T element) {
         checkIndex(index);
-        Object oldValue = elementData[index];
+        T oldValue = elementData[index];
         elementData[index] = element;
         return oldValue;
     }
 
     @Override
-    public void add(int index, Object element) {
+    public void add(int index, T element) {
         checkIndex(index);
 
         ensureCapacity(size + 1);
@@ -132,9 +148,9 @@ public class CustomList implements List {
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         checkIndex(index);
-        Object removed = elementData[index];
+        T removed = elementData[index];
 
         for(int i = index; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
