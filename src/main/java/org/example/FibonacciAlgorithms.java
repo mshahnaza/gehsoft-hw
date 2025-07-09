@@ -41,7 +41,7 @@ public class FibonacciAlgorithms {
         if (memoTable.containsKey(n)) {
             return memoTable.get(n);
         }
-        long result = fibonacciRecursive(n-1) + fibonacciRecursive(n-2);
+        long result = fibonacciMemoized(n-1) + fibonacciMemoized(n-2);
         memoTable.put(n, result);
         return result;
     }
