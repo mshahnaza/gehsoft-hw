@@ -1,17 +1,47 @@
 package org.example.test_runner.test;
 
 import org.example.FibonacciAlgorithms;
-import org.example.test_runner.annotations.Test;
+import org.example.test_runner.annotations.*;
 import static org.example.test_runner.Assertions.*;
 
 public class FibonacciTest {
+    @BeforeEach
+    public void before() {
+        System.out.println("Test started");
+    }
+
+    @AfterEach
+    public void after() {
+        System.out.println("Test finished");
+    }
 
     @Test
     public void fibonacciRecursive() {
-        long zero = FibonacciAlgorithms.fibonacciRecursive(0);
-        long one = FibonacciAlgorithms.fibonacciRecursive(1);
+        long result = FibonacciAlgorithms.fibonacciRecursive(10);
 
-        assertEquals(0, zero);
-        assertEquals(1, one);
+        assertEquals(55, result);
+    }
+
+    @Test(description = "Check iterative Fibonacci for 10", timeout = 1000)
+    public void fibonacciIterativeTest() {
+        long result = FibonacciAlgorithms.fibonacciIterative(10);
+        assertEquals(55, result);
+    }
+
+    @Test(description = "Check memoized Fibonacci correctness")
+    public void fibonacciMemoizedTest() {
+        long result = FibonacciAlgorithms.fibonacciMemoized(15);
+        assertEquals(610, result);
+    }
+
+    @Test(description = "This test should fail")
+    public void failingTest() {
+        long result = FibonacciAlgorithms.fibonacciRecursive(1);
+        assertEquals(10, result);
+    }
+
+    @Test(timeout = 10)
+    public void timeoutExceededTest() throws InterruptedException {
+        FibonacciAlgorithms.fibonacciRecursive(50);
     }
 }
