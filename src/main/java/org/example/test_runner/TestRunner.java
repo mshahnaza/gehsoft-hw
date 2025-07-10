@@ -2,6 +2,7 @@ package org.example.test_runner;
 
 import org.example.test_runner.annotations.AfterEach;
 import org.example.test_runner.annotations.BeforeEach;
+import org.example.test_runner.annotations.ParametrizedTest;
 import org.example.test_runner.annotations.Test;
 
 import java.io.File;
@@ -16,6 +17,9 @@ import java.util.concurrent.*;
 public class TestRunner {
     private static int failedTests = 0, passedTests = 0;
     private static long totalTime = 0;
+
+    private static List<Method> beforeEachMethods;
+    private static List<Method> afterEachMethods;
 
     public static void main(String[] args) throws ClassNotFoundException {
         String packageName = "org.example.test_runner.test";
@@ -43,8 +47,8 @@ public class TestRunner {
     public static void runTests(Class<?> clazz) {
         List<Method> methods = getAllMethods(clazz);
 
-        List<Method> beforeEachMethods = new ArrayList<>();
-        List<Method> afterEachMethods = new ArrayList<>();
+        beforeEachMethods = new ArrayList<>();
+        afterEachMethods = new ArrayList<>();
 
         for (Method method : methods) {
             if (method.isAnnotationPresent(BeforeEach.class)) beforeEachMethods.add(method);
@@ -53,62 +57,86 @@ public class TestRunner {
 
         for (Method method : methods) {
             if (method.isAnnotationPresent(Test.class)) {
-                long startTime = System.currentTimeMillis();
-                Object instance = null;
+                runSingleTest(clazz, method, null);
+            }
+            if (method.isAnnotationPresent(ParametrizedTest.class)) {
+                ParametrizedTest params = method.getAnnotation(ParametrizedTest.class);
 
-                try {
-                    instance = clazz.getDeclaredConstructor().newInstance();
-                    long timeout = method.getAnnotation(Test.class).timeout();
-                    String description = method.getAnnotation(Test.class).description();
-
-                    for (Method before : beforeEachMethods) {
-                        before.setAccessible(true);
-                        before.invoke(instance);
-                    }
-
-                    if (timeout > 0) {
-                        Object finalInstance = instance;
-                        invokeWithTimeout(() -> {
-                            method.invoke(finalInstance);
-                            return null;
-                        }, timeout);
-                    } else {
-                        method.invoke(instance);
-                    }
-
-                    passedTests++;
-
-                    long duration = System.currentTimeMillis() - startTime;
-                    totalTime += duration;
-                    System.out.println("✓ " + clazz.getSimpleName() + "." + method.getName()
-                            + (description.isEmpty() ? "" : " - " + description) + " (" + duration + "ms)");
-                } catch (InvocationTargetException e) {
-                    failedTests++;
-                    long duration = System.currentTimeMillis() - startTime;
-                    totalTime += duration;
-                    System.out.println("✗ " + clazz.getSimpleName() + "." + method.getName() + " (" + duration + "ms)"
-                    + " - " + e.getCause().getClass().getSimpleName() + ": " + e.getCause().getMessage());
-                } catch (Exception e) {
-                    failedTests++;
-                    long duration = System.currentTimeMillis() - startTime;
-                    totalTime += duration;
-
-                    Throwable cause = e.getCause();
-                    String errorType = (cause != null) ? cause.getClass().getSimpleName() : e.getClass().getSimpleName();
-                    String message = (cause != null) ? cause.getMessage() : e.getMessage();
-
-                    System.out.println("✗ " + clazz.getSimpleName() + "." + method.getName() + " (" + duration + "ms)"
-                            + " - " + errorType + ": " + message);
-                } finally {
-                    try {
-                        for (Method after : afterEachMethods) {
-                            after.setAccessible(true);
-                            after.invoke(instance);
-                        }
-                    } catch (Exception e) {}
+                for (int value : params.intValues()) {
+                    runSingleTest(clazz, method, value);
                 }
 
+                for (String value : params.stringValues()) {
+                    runSingleTest(clazz, method, value);
+                }
             }
+        }
+    }
+
+    public static void runSingleTest(Class<?> clazz, Method method, Object param) {
+        long startTime = System.currentTimeMillis();
+        Object instance = null;
+
+        try {
+            instance = clazz.getDeclaredConstructor().newInstance();
+
+            for (Method before : beforeEachMethods) {
+                before.setAccessible(true);
+                before.invoke(instance);
+            }
+
+            long timeout = 0;
+            String description = "";
+
+            if (param == null) {
+                timeout = method.getAnnotation(Test.class).timeout();
+                description = method.getAnnotation(Test.class).description();
+                if (timeout > 0) {
+                    Object finalInstance = instance;
+                    invokeWithTimeout(() -> {
+                        method.invoke(finalInstance);
+                        return null;
+                    }, timeout);
+                } else {
+                    method.invoke(instance);
+                }
+            } else {
+                method.invoke(instance, param);
+            }
+
+            passedTests++;
+
+            long duration = System.currentTimeMillis() - startTime;
+            totalTime += duration;
+            String paramStr = (param != null) ? " [param=" + param + "]" : "";
+            System.out.println("✓ " + clazz.getSimpleName() + "." + method.getName()
+                    + (description.isEmpty() ? "" : " - " + description) + paramStr + " (" + duration + "ms)");
+        } catch (InvocationTargetException e) {
+            failedTests++;
+            long duration = System.currentTimeMillis() - startTime;
+            totalTime += duration;
+            String paramStr = (param != null) ? " [param=" + param + "]" : "";
+            System.out.println("✗ " + clazz.getSimpleName() + "." + method.getName() + " (" + duration + "ms)" + paramStr
+                    + " - " + e.getCause().getClass().getSimpleName() + ": " + e.getCause().getMessage());
+        } catch (Exception e) {
+            failedTests++;
+            long duration = System.currentTimeMillis() - startTime;
+            totalTime += duration;
+
+            Throwable cause = e.getCause();
+            String errorType = (cause != null) ? cause.getClass().getSimpleName() : e.getClass().getSimpleName();
+            String message = (cause != null) ? cause.getMessage() : e.getMessage();
+
+            String paramStr = (param != null) ? " [param=" + param + "]" : "";
+            System.out.println("✗ " + clazz.getSimpleName() + "." + method.getName() + " (" + duration + "ms)" + paramStr
+                    + " - " + errorType + ": " + message);
+        } finally {
+            try {
+                for (Method after : afterEachMethods) {
+                    after.setAccessible(true);
+                    after.invoke(instance);
+                }
+            } catch (Exception e) {}
         }
     }
 
@@ -155,9 +183,7 @@ public class TestRunner {
 
         while (current != null && current != Object.class) {
             for (Method method : current.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(Test.class)) {
-                    testMethods.add(method);
-                }
+                testMethods.add(method);
             }
             current = current.getSuperclass();
         }
@@ -168,11 +194,20 @@ public class TestRunner {
     public static int countTests(List<Class<?>> classes) {
         int count = 0;
         for (Class<?> clazz : classes) {
-            List<Method> allTestMethods = getAllMethods(clazz);
-            count += allTestMethods.size();
+            List<Method> methods = getAllMethods(clazz);
+            for (Method method : methods) {
+                if (method.isAnnotationPresent(Test.class)) {
+                    count++;
+                }
+                if (method.isAnnotationPresent(ParametrizedTest.class)) {
+                    ParametrizedTest params = method.getAnnotation(ParametrizedTest.class);
+                    count += params.intValues().length + params.stringValues().length;
+                }
+            }
         }
         return count;
     }
+
 
 
 }

@@ -7,12 +7,13 @@ import static org.example.test_runner.Assertions.*;
 public class FibonacciTest {
     @BeforeEach
     public void before() {
-        System.out.println("Test started");
+        System.out.println("[Started -> BeforeEach]");
     }
 
     @AfterEach
     public void after() {
-        System.out.println("Test finished");
+        System.out.println("[Finished -> AfterEach]");
+        System.out.println();
     }
 
     @Test
@@ -43,5 +44,12 @@ public class FibonacciTest {
     @Test(timeout = 10)
     public void timeoutExceededTest() throws InterruptedException {
         FibonacciAlgorithms.fibonacciRecursive(50);
+    }
+
+    @ParametrizedTest(intValues = {0, 1, 2, 3, 5, 10, 15})
+    public void parametrizedFibonacciRecursive(int n) {
+        long expected = FibonacciAlgorithms.fibonacciIterative(n);
+        long actual = FibonacciAlgorithms.fibonacciRecursive(n);
+        assertEquals(expected, actual);
     }
 }
