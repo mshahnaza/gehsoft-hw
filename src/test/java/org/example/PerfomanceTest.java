@@ -29,6 +29,11 @@ public class PerfomanceTest {
             CustomList<Integer> list = new CustomList<>();
             for (int i = 0; i < count; i++) list.add(i);
         });
+
+        runTest("MyLinkedList", () -> {
+            MyLinkedList<Integer> list = new MyLinkedList<>();
+            for (int i = 0; i < count; i++) list.add(i);
+        });
     }
 
     private static void addRemoveTest() {
@@ -48,6 +53,12 @@ public class PerfomanceTest {
 
         runTest("CustomList", () -> {
             CustomList<Integer> list = new CustomList<>();
+            for (int i = 0; i < count; i++) list.add(i);
+            for (int i = 0; i < count; i++) list.remove(0);
+        });
+
+        runTest("MyLinkedList", () -> {
+            MyLinkedList<Integer> list = new MyLinkedList<>();
             for (int i = 0; i < count; i++) list.add(i);
             for (int i = 0; i < count; i++) list.remove(0);
         });

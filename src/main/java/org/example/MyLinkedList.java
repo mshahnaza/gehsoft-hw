@@ -418,7 +418,6 @@ public class MyLinkedList<T> implements List<T>, Deque<T> {
         return a;
     }
 
-    @Override
     public MyLinkedList<T> reversed() {
         MyLinkedList<T> result = new MyLinkedList<>();
         Node<T> currentNode = last;
