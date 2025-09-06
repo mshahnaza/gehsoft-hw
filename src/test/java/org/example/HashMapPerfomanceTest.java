@@ -19,6 +19,11 @@ public class HashMapPerfomanceTest {
             for (int i = 0; i < count; i++) map.put(i, i);
         });
 
+        runTest("MyHashMapDoubleHash put", () -> {
+            Map<Integer, Integer> map = new MyHashMapDoubleHash<>();
+            for (int i = 0; i < count; i++) map.put(i, i);
+        });
+
         runTest("JDK HashMap get", () -> {
             Map<Integer, Integer> map = new HashMap<>();
             for (int i = 0; i < count; i++) map.put(i, i);
@@ -31,6 +36,12 @@ public class HashMapPerfomanceTest {
             for (int i = 0; i < count; i++) map.get(i);
         });
 
+        runTest("MyHashMapDoubleHash get", () -> {
+            Map<Integer, Integer> map = new MyHashMapDoubleHash<>();
+            for (int i = 0; i < count; i++) map.put(i, i);
+            for (int i = 0; i < count; i++) map.get(i);
+        });
+
         runTest("JDK HashMap remove", () -> {
             Map<Integer, Integer> map = new HashMap<>();
             for (int i = 0; i < count; i++) map.put(i, i);
@@ -39,6 +50,12 @@ public class HashMapPerfomanceTest {
 
         runTest("MyHashMap remove", () -> {
             Map<Integer, Integer> map = new MyHashMap<>();
+            for (int i = 0; i < count; i++) map.put(i, i);
+            for (int i = 0; i < count; i++) map.remove(i);
+        });
+
+        runTest("MyHashMapDoubleHash remove", () -> {
+            Map<Integer, Integer> map = new MyHashMapDoubleHash<>();
             for (int i = 0; i < count; i++) map.put(i, i);
             for (int i = 0; i < count; i++) map.remove(i);
         });
