@@ -1,67 +1,76 @@
 package org.example;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MyHashMapTest {
 
-    @Test
-    void put() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    static Stream<Map<String, Integer>> mapsProvider() {
+        return Stream.of(
+                new MyHashMap<>(),
+                new MyHashMapDoubleHash<>() // Можно тестировать несколько реализаций
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_putOrUpdateValue_when_added(Map<String, Integer> map) {
         map.put("one", 1);
         assertEquals(1, map.put("one", 2));
     }
 
-    @Test
-    void get() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnValue_when_keyExists(Map<String, Integer> map) {
         map.put("one", 1);
         assertEquals(1, map.get("one"));
-        assertEquals(null, map.get("two"));
+        assertNull(map.get("two"));
     }
 
-    @Test
-    void remove() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_removeEntry_when_keyExists(Map<String, Integer> map) {
         map.put("one", 1);
         assertEquals(1, map.remove("one"));
-        assertEquals(null, map.get("one"));
+        assertNull(map.get("one"));
     }
 
-    @Test
-    void clear() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_clearAllEntries_when_clearCalled(Map<String, Integer> map) {
         map.put("one", 1);
         map.put("two", 2);
         map.clear();
         assertEquals(0, map.size());
-        assertEquals(null, map.get("one"));
+        assertNull(map.get("one"));
     }
 
-    @Test
-    void containsKey() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnTrue_when_keyExists(Map<String, Integer> map) {
         map.put("two", 2);
         assertTrue(map.containsKey("two"));
         assertFalse(map.containsKey("three"));
     }
 
-    @Test
-    void containsValue() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnTrue_when_valueExists(Map<String, Integer> map) {
         map.put("one", 1);
         assertTrue(map.containsValue(1));
         assertFalse(map.containsValue(3));
     }
 
-    @Test
-    void entrySet() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnAllEntries_when_entrySetCalled(Map<String, Integer> map) {
         map.put("one", 1);
         map.put("two", 2);
         map.put("three", 3);
@@ -69,9 +78,9 @@ public class MyHashMapTest {
         assertEquals(3, entries.size());
     }
 
-    @Test
-    void keySet() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnAllKeys_when_keySetCalled(Map<String, Integer> map) {
         map.put("one", 1);
         map.put("two", 2);
         map.put("three", 3);
@@ -80,9 +89,9 @@ public class MyHashMapTest {
         assertTrue(keys.contains("two"));
     }
 
-    @Test
-    void values() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnAllValues_when_valuesCalled(Map<String, Integer> map) {
         map.put("one", 1);
         map.put("two", 2);
         Collection<Integer> values = map.values();
@@ -90,9 +99,9 @@ public class MyHashMapTest {
         assertTrue(values.contains(1));
     }
 
-    @Test
-    void putAll() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_copyAllEntries_when_putAllCalled(Map<String, Integer> map) {
         map.put("one", 1);
         map.put("two", 2);
         MyHashMap<String, Integer> map2 = new MyHashMap<>();
@@ -102,9 +111,9 @@ public class MyHashMapTest {
         assertTrue(map2.containsKey("two"));
     }
 
-    @Test
-    void isEmpty() {
-        MyHashMap<String, Integer> map = new MyHashMap<>();
+    @ParameterizedTest
+    @MethodSource("mapsProvider")
+    void should_returnFalse_when_mapIsNotEmpty(Map<String, Integer> map) {
         map.put("one", 1);
         assertFalse(map.isEmpty());
     }
