@@ -15,7 +15,7 @@ public class MyHashMapTest {
     static Stream<Map<String, Integer>> mapsProvider() {
         return Stream.of(
                 new MyHashMap<>(),
-                new MyHashMapDoubleHash<>() // Можно тестировать несколько реализаций
+                new MyHashMapDoubleHash<>()
         );
     }
 
