@@ -63,6 +63,19 @@ public class MyHashMap<K, V> implements Map<K, V> {
         return null;
     }
 
+    protected Node<K, V> getNode(Object key) {
+        int hash = hash(key);
+        int index = (table.length - 1) & hash;
+        Node<K, V> node = table[index];
+        while (node != null) {
+            if (node.hash == hash && Objects.equals(node.key, key)) {
+                return node;
+            }
+            node = node.next;
+        }
+        return null;
+    }
+
     @Override
     public V put(K key, V value) {
         if(size >= threshold) {
@@ -229,11 +242,11 @@ public class MyHashMap<K, V> implements Map<K, V> {
         return entries;
     }
 
-    private static class Node<K, V> implements Map.Entry<K, V> {
-        private int hash;
-        private K key;
-        private V value;
-        private Node<K, V> next;
+    protected static class Node<K, V> implements Map.Entry<K, V> {
+        protected int hash;
+        protected K key;
+        protected V value;
+        protected Node<K, V> next;
 
         public Node(int hash, K key, V value, Node<K, V> next) {
             this.hash = hash;
