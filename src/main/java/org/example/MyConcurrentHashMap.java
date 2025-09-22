@@ -16,7 +16,7 @@ public class MyConcurrentHashMap<K, V> implements Map<K, V> {
 
     private Node<K,V>[] table;
     private ReentrantLock[] locks;
-    private final ReentrantLock resizeLock = new ReentrantLock(); // <-- новый lock
+    private final ReentrantLock resizeLock = new ReentrantLock();
 
     public MyConcurrentHashMap(int initialCapacity, float loadFactor) {
         if (initialCapacity < 0)
