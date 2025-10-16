@@ -1,0 +1,9 @@
+Parallel Stream with 1threads | Sum: 0| Time: 70ms
+Parallel Stream with 10threads | Sum: 0| Time: 10ms
+Parallel Stream with 100threads | Sum: 0| Time: 32ms
+Parallel Stream with 1000threads | Sum: 0| Time: 471ms
+
+Parallel Threads with 1threads | Sum: 0| Time: 39ms
+Parallel Threads with 10threads | Sum: 0| Time: 15ms
+Parallel Threads with 100threads | Sum: 0| Time: 29ms
+Parallel Threads with 1000threads | Sum: 0| Time: 203ms
