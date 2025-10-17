@@ -4,28 +4,35 @@ import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class BankAtomic {
-    private final AtomicLong[] balances;
+public class BankAtomic extends Bank {
+    private final AtomicLong[] atomicBalances;
 
     public BankAtomic(int numberOfAccounts, long minBalance, long maxBalance) {
-        balances = new AtomicLong[numberOfAccounts];
+        atomicBalances = new AtomicLong[numberOfAccounts];
         for (int i = 0; i < numberOfAccounts; i++) {
-            balances[i] = new AtomicLong(ThreadLocalRandom.current().nextLong(minBalance, maxBalance + 1));
+            atomicBalances[i] = new AtomicLong(ThreadLocalRandom.current().nextLong(minBalance, maxBalance + 1));
         }
     }
 
+    @Override
     public int pickRandomAccountId() {
-        return ThreadLocalRandom.current().nextInt(balances.length);
+        return ThreadLocalRandom.current().nextInt(atomicBalances.length);
     }
+
+    @Override
     public long getAccountBalance(int accountId) {
-        return balances[accountId].get();
+        return atomicBalances[accountId].get();
     }
+
+    @Override
     public void setAccountBalance(int accountId, long newBalance) {
-        balances[accountId].set(newBalance);
+        atomicBalances[accountId].set(newBalance);
     }
+
+    @Override
     public BigInteger getSumOfAllAccounts() {
         long sum = 0;
-        for (AtomicLong balance : balances) {
+        for (AtomicLong balance : atomicBalances) {
             sum += balance.get();
         }
         return BigInteger.valueOf(sum);
@@ -35,10 +42,10 @@ public class BankAtomic {
         if (from == to) return;
         long oldVal;
         do {
-            oldVal = balances[from].get();
+            oldVal = atomicBalances[from].get();
             if (oldVal < amount) return;
-        } while (!balances[from].compareAndSet(oldVal, oldVal - amount));
-        balances[to].getAndAdd(amount);
+        } while (!atomicBalances[from].compareAndSet(oldVal, oldVal - amount));
+        atomicBalances[to].getAndAdd(amount);
 
     }
 

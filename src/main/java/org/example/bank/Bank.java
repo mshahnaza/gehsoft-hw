@@ -13,6 +13,9 @@ public class Bank {
         }
     }
 
+    public Bank() {
+    }
+
     public int pickRandomAccountId() {
         return ThreadLocalRandom.current().nextInt(balances.length);
     }
