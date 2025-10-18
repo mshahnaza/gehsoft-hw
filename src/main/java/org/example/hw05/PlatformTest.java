@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw05;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

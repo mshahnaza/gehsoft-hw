@@ -1,4 +1,4 @@
-package org.example.bank;
+package org.example.hw05.bank;
 
 import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
