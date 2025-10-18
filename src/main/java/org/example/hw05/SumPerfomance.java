@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw05;
 
 import java.io.FileWriter;
 import java.util.ArrayList;

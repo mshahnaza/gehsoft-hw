@@ -1,4 +1,4 @@
-package org.example.bank;
+package org.example.hw05.bank;
 
 public class BankSynchronized extends Bank{
     public BankSynchronized(int numberOfAccounts, long minBalance, long maxBalance) {
