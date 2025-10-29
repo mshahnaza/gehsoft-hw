@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Web Server</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title"> Custom Web Server</h1>
+        <p class="hero-subtitle">Multi-threaded HTTP Server with Virtual Threads, WebSocket & File Upload</p>
+        <div class="server-badge">
+            <span id="server-type">Virtual Threads</span> | Port: <span id="server-port">8080</span>
+        </div>
+    </div>
+    <div class="hero-animation">
+        <div class="pulse-circle"></div>
+        <div class="pulse-circle delay-1"></div>
+        <div class="pulse-circle delay-2"></div>
+    </div>
+</header>
+
+<div class="container">
+    <section class="gallery-section">
+        <h2 class="section-title"> Static Content Gallery</h2>
+        <p class="section-description">Testing static file serving with images</p>
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="/static/images/photo1.jpg" alt="Photo 1" loading="lazy">
+                <div class="gallery-overlay">Photo 1</div>
+            </div>
+            <div class="gallery-item">
+                <img src="/static/images/photo2.jpg" alt="Photo 2" loading="lazy">
+                <div class="gallery-overlay">Photo 2</div>
+            </div>
+            <div class="gallery-item">
+                <img src="/static/images/photo3.jpg" alt="Photo 3" loading="lazy">
+                <div class="gallery-overlay">Photo 3</div>
+            </div>
+            <div class="gallery-item">
+                <img src="/static/images/photo4.jpg" alt="Photo 4" loading="lazy">
+                <div class="gallery-overlay">Photo 4</div>
+            </div>
+            <div class="gallery-item">
+                <img src="/static/images/photo5.jpg" alt="Photo 5" loading="lazy">
+                <div class="gallery-overlay">Photo 5</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="api-section">
+        <h2 class="section-title"> API Endpoints</h2>
+        <div class="api-cards">
+            <div class="api-card">
+                <h3> Quick Links</h3>
+                <div class="api-links">
+                    <a href="/api/time" class="api-link">
+                        <span class="api-method">GET</span>
+                        <span class="api-path">/api/time</span>
+                        <span class="api-desc">Current server time</span>
+                    </a>
+                    <a href="/api/stats" class="api-link">
+                        <span class="api-method">GET</span>
+                        <span class="api-path">/api/stats</span>
+                        <span class="api-desc">Server statistics</span>
+                    </a>
+                    <a href="/upload" class="api-link">
+                        <span class="api-method special">DEMO</span>
+                        <span class="api-path">/upload</span>
+                        <span class="api-desc">File upload interface</span>
+                    </a>
+                    <a href="/websocket-demo" class="api-link">
+                        <span class="api-method special">DEMO</span>
+                        <span class="api-path">/websocket-demo</span>
+                        <span class="api-desc">WebSocket chat</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <h3>POST /api/echo</h3>
+                <p>Test the echo endpoint - server will return your message</p>
+                <form id="echoForm" class="api-form">
+                    <input type="text" name="message" placeholder="Type your message here..." class="form-input" required>
+                    <button type="submit" class="btn btn-primary">Send Echo Request</button>
+                </form>
+                <div id="response" class="response-box"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <h2 class="section-title">📊 Live Server Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value" id="stat-requests">-</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value" id="stat-uptime">-</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌐</div>
+                <div class="stat-value" id="stat-connections">-</div>
+                <div class="stat-label">WebSocket Connections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-value" id="stat-port">8080</div>
+                <div class="stat-label">Server Port</div>
+            </div>
+        </div>
+        <button id="refresh-stats" class="btn btn-secondary">🔄 Refresh Statistics</button>
+    </section>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
