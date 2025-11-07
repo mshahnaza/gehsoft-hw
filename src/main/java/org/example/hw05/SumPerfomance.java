@@ -9,6 +9,12 @@ import java.util.stream.IntStream;
 public class SumPerfomance {
     private static final short[] array = new short[100_000_000];
 
+    static {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = 1;
+        }
+    }
+
     public static void main(String[] args) {
         int[] threadCounts = {1, 10, 100, 1000};
 
