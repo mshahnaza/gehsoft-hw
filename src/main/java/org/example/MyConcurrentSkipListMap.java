@@ -95,31 +95,47 @@ public class MyConcurrentSkipListMap<K,V> implements Map<K,V> {
     public V put(K key, V value) {
         Node<K, V>[] preds = new Node[MAX_LEVEL + 1];
         Node<K, V>[] succs = new Node[MAX_LEVEL + 1];
-        for (int i = 0; i <= MAX_LEVEL; i++) {
-            preds[i] = head;
-            succs[i] = null;
-        }
+
         while (true) {
+            for (int i = 0; i <= MAX_LEVEL; i++) {
+                preds[i] = null;
+                succs[i] = null;
+            }
+
             if (find(key, preds, succs)) {
-                return succs[0].value.getAndSet(value);
+                V oldValue = succs[0].value.get();
+                succs[0].value.set(value);
+                return oldValue;
             } else {
                 int lvl = randomLevel();
                 Node<K, V> newNode = new Node<>(key, value, lvl);
+
                 for (int i = 0; i <= lvl; i++) {
                     newNode.next[i].set(succs[i], false);
                 }
-                boolean valid = true;
-                for (int i = 0; i <= lvl; i++) {
-                    if (!preds[i].next[i].compareAndSet(succs[i], newNode, false, false)) {
-                        valid = false;
-                        break;
+
+                if (!preds[0].next[0].compareAndSet(succs[0], newNode, false, false)) {
+                    continue;
+                }
+
+                for (int i = 1; i <= lvl; i++) {
+                    while (true) {
+                        if (preds[i] == null) {
+                            break;
+                        }
+                        if (!preds[i].next[i].compareAndSet(succs[i], newNode, false, false)) {
+                            break;
+                        }
                     }
                 }
-                if (valid) {
-                    level.updateAndGet(l -> Math.max(l, lvl));
-                    size.incrementAndGet();
-                    return null;
-                }
+
+                int currentLevel;
+                do {
+                    currentLevel = level.get();
+                } while (lvl > currentLevel && !level.compareAndSet(currentLevel, lvl));
+
+                size.incrementAndGet();
+                return null;
             }
         }
     }
@@ -130,18 +146,38 @@ public class MyConcurrentSkipListMap<K,V> implements Map<K,V> {
         Node<K, V>[] preds = new Node[MAX_LEVEL + 1];
         Node<K, V>[] succs = new Node[MAX_LEVEL + 1];
         Node<K, V> nodeToRemove;
+
         while (true) {
             if (!find(k, preds, succs)) return null;
+
             nodeToRemove = succs[0];
-            Node<K, V> succ = nodeToRemove.next[0].getReference();
 
-            if (!nodeToRemove.next[0].compareAndSet(succ, succ, false, true)) continue;
-
-            for (int i = nodeToRemove.next.length - 1; i >= 0; i--) {
-                preds[i].next[i].compareAndSet(nodeToRemove, nodeToRemove.next[i].getReference(), false, false);
+            for (int i = nodeToRemove.next.length - 1; i >= 1; i--) {
+                boolean[] marked = {false};
+                Node<K, V> next = nodeToRemove.next[i].get(marked);
+                while (!marked[0]) {
+                    if (nodeToRemove.next[i].compareAndSet(next, next, false, true)) {
+                        break;
+                    }
+                    next = nodeToRemove.next[i].get(marked);
+                }
             }
-            size.decrementAndGet();
-            return nodeToRemove.value.get();
+
+            boolean[] marked = {false};
+            Node<K, V> next = nodeToRemove.next[0].get(marked);
+            while (true) {
+                boolean success = nodeToRemove.next[0].compareAndSet(next, next, false, true);
+                if (success) {
+                    find(k, preds, succs);
+                    V oldValue = nodeToRemove.value.get();
+                    size.decrementAndGet();
+                    return oldValue;
+                }
+                next = nodeToRemove.next[0].get(marked);
+                if (marked[0]) {
+                    return null;
+                }
+            }
         }
     }
 
