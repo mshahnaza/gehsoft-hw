@@ -36,18 +36,22 @@ public class MyLinkedHashMap<K,V> extends MyHashMap<K,V> {
     public MyLinkedHashMap(Map<? extends K, ? extends V> m) {
         super();
         this.accessOrder = false;
-        super.putAll(m);
+        putAll(m);
     }
 
     @Override
     public V put(K key, V value) {
+        boolean keyExists = containsKey(key);
         V oldValue = super.put(key, value);
 
-        Node<K, V> node = getNode(key);
-        if (oldValue == null) {
-            linkNodeLast(node);
+        if (!keyExists) {
+            Node<K, V> newNode = new Node<>(0, key, value, null);
+            linkNodeLast(newNode);
         } else if (accessOrder) {
-            moveToEnd(node);
+            Node<K, V> node = findNodeByKey(key);
+            if (node != null) {
+                moveToEnd(node);
+            }
         }
         return oldValue;
     }
@@ -56,15 +60,17 @@ public class MyLinkedHashMap<K,V> extends MyHashMap<K,V> {
     public V get(Object key) {
         V value = super.get(key);
         if (value != null && accessOrder) {
-            Node<K, V> node = getNode(key);
-            moveToEnd(node);
+            Node<K, V> node = findNodeByKey(key);
+            if (node != null) {
+                moveToEnd(node);
+            }
         }
         return value;
     }
 
     @Override
     public V remove(Object key) {
-        Node<K, V> node = getNode(key);
+        Node<K, V> node = findNodeByKey(key);
         if (node != null) {
             unlink(node);
         }
@@ -78,11 +84,18 @@ public class MyLinkedHashMap<K,V> extends MyHashMap<K,V> {
     }
 
     @Override
+    public void putAll(Map<? extends K, ? extends V> m) {
+        for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
     public Set<K> keySet() {
         Set<K> keys = new LinkedHashSet<>();
         Node<K,V> current = head;
         while(current != null) {
-            keys.add((K) current.getKey());
+            keys.add(current.getKey());
             current = current.after;
         }
         return keys;
@@ -93,7 +106,7 @@ public class MyLinkedHashMap<K,V> extends MyHashMap<K,V> {
         List<V> values = new ArrayList<>();
         Node<K,V> current = head;
         while(current != null) {
-            values.add((V) current.getValue());
+            values.add(current.getValue());
             current = current.after;
         }
         return values;
@@ -139,17 +152,42 @@ public class MyLinkedHashMap<K,V> extends MyHashMap<K,V> {
         node.before = node.after = null;
     }
 
-    @Override
-    protected Node<K,V> getNode(Object key) {
-        return (Node<K,V>) super.getNode(key);
+    private Node<K, V> findNodeByKey(Object key) {
+        Node<K, V> current = head;
+        while (current != null) {
+            if (Objects.equals(current.getKey(), key)) {
+                return current;
+            }
+            current = current.after;
+        }
+        return null;
     }
 
-
-    private static class Node<K,V> extends MyHashMap.Node{
-        Node<K,V> before,after;
+    private static class Node<K,V> implements Map.Entry<K,V> {
+        Node<K,V> before, after;
+        private K key;
+        private V value;
 
         public Node(int hash, K key, V value, Node<K,V> next) {
-            super(hash, key, value, next);
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public V setValue(V value) {
+            V oldValue = this.value;
+            this.value = value;
+            return oldValue;
         }
     }
 }
