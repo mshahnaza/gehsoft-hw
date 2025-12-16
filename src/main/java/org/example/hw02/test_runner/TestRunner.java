@@ -1,9 +1,9 @@
-package org.example.test_runner;
+package org.example.hw02.test_runner;
 
-import org.example.test_runner.annotations.AfterEach;
-import org.example.test_runner.annotations.BeforeEach;
-import org.example.test_runner.annotations.ParametrizedTest;
-import org.example.test_runner.annotations.Test;
+import org.example.hw02.test_runner.annotations.AfterEach;
+import org.example.hw02.test_runner.annotations.BeforeEach;
+import org.example.hw02.test_runner.annotations.ParametrizedTest;
+import org.example.hw02.test_runner.annotations.Test;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.*;
 
 public class TestRunner {

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw02;
 
 import lombok.*;
 import lombok.experimental.Accessors;

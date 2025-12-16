@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw01;
 
 import java.util.*;
 

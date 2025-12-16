@@ -1,8 +1,12 @@
-package org.example.test_runner.test;
+package org.example.hw02.test_runner.test;
 
-import org.example.FibonacciAlgorithms;
+import org.example.hw02.FibonacciAlgorithms;
+import org.example.hw02.test_runner.annotations.AfterEach;
+import org.example.hw02.test_runner.annotations.BeforeEach;
+import org.example.hw02.test_runner.annotations.ParametrizedTest;
+import org.example.hw02.test_runner.annotations.Test;
 import org.example.test_runner.annotations.*;
-import static org.example.test_runner.Assertions.*;
+import static org.example.hw02.test_runner.Assertions.*;
 
 public class FibonacciTest {
     @BeforeEach

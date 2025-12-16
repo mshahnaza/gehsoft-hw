@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.hw04.MyHashMap;
+import org.example.hw04.MyHashMapDoubleHash;
+
 import java.util.HashMap;
 import java.util.Map;
 

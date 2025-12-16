@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw04;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

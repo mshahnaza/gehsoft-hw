@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.hw04.MyHashMap;
+import org.example.hw04.MyHashMapDoubleHash;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

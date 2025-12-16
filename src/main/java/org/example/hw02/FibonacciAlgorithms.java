@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw02;
 
 import java.util.HashMap;
 import java.util.Map;

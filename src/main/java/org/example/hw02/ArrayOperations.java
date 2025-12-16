@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw02;
 
 public class ArrayOperations {
     public static void shiftLeftSystemCopy(int[] array, int positions) {

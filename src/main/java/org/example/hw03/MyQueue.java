@@ -1,4 +1,4 @@
-package org.example;
+package org.example.hw03;
 
 import java.util.NoSuchElementException;
 

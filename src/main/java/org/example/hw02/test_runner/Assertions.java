@@ -1,4 +1,4 @@
-package org.example.test_runner;
+package org.example.hw02.test_runner;
 
 import java.util.Objects;
 

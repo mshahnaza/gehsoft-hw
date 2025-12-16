@@ -1,8 +1,7 @@
-package org.example;
+package org.example.hw03;
 
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.UnaryOperator;
 
 public class MyLinkedList<T> implements List<T>, Deque<T> {
 

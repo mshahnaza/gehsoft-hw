@@ -1,6 +1,6 @@
 package org.example.hw05.decorators;
 
-import org.example.CustomList;
+import org.example.hw01.CustomList;
 
 import java.util.Collection;
 import java.util.Iterator;

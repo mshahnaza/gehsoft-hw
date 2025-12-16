@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.hw02.ArrayOperations;
+
 public class ArrayOperationsPerfomanceTest {
     public static void main(String[] args) {
         int[] sizes = new int[] { 1000, 10000, 100000, 1000000 };

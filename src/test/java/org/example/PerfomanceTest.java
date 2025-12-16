@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.hw01.CustomList;
+import org.example.hw03.MyLinkedList;
+
 import java.util.*;
 
 public class PerfomanceTest {

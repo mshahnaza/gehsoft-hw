@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.hw02.FibonacciAlgorithms;
+
 public class FibonacciPerfomanceTest {
     public static void main(String[] args) {
         System.out.println("======Fibonacci perfomance test======");

@@ -1,4 +1,4 @@
-package org.example.test_runner.annotations;
+package org.example.hw02.test_runner.annotations;
 
 import java.lang.annotation.*;
 

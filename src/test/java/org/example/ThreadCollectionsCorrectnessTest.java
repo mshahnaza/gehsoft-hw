@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.hw01.CustomList;
 import org.example.hw05.decorators.CopyOnWriteList;
 import org.example.hw05.decorators.LockDecorator;
 import org.example.hw05.decorators.SynchronizedDecorator;

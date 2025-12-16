@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.hw01.CustomList;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
